@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true"/>
+  <!-- Launch gazebo simulation -->
+  <!--MODIFICATO-->
+  <include file="$(find almasim)/launch/nuovi/simulatione.launch">
+    <arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- Launch MoveIt!-->
+  <!--DA MODIFICARE, MA TENDENZIALMENTE POCO-->
+  <include file="$(find ur3_sim_moveit_config)/launch/ur3_sim_moveit_planning_execution.launch"/>
+
+  <!-- Launch RViz-->
+  <!--OMITTIBILE, CAPIRE SE CONVIENE FARLO NEL NOSTRO PACCHETTO-->
+  <include file="$(find ur3_sim_moveit_config)/launch/moveit_rviz.launch"/>
+
+</launch>

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<launch>
+  <arg name="gui" default="true" doc="Starts gazebo gui" />
+
+  <!-- gazebo simulation-->
+  <include file="$(find almasim)/launch/erc.launch">
+	<arg name="gui" value="$(arg gui)"/>
+  </include>
+
+  <!-- moveit -->
+  <include file="$(find ur3_moveit_config)/launch/ur3_moveit_planning_execution.launch">
+    <arg name="sim" default="true" />
+  </include>
+
+  <!-- rviz -->
+  <!--include file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
+    <arg name="config" default="true" />
+  </include-->
+  <!-- note: rviz requires unpaused simulation or face a startup crash-->
+
+  <node pkg="simulation" type="gripper.py"  name="move_group_python_gripper" output="screen"/>
+  <!-- TODO: change gripper location package -->
+
+</launch>

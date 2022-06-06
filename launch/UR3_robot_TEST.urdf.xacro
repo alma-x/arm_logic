@@ -1,0 +1,67 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro"
+       name="ur3" >
+
+  <!-- robot mechanical parameters -->
+  <xacro:arg name="joint_limited" default="true"/>
+
+  <xacro:arg name="transmission_hw_interface" default="hardware_interface/PositionJointInterface"/>
+  <!-- robot positioning constraint parameters -->
+  <xacro:arg name="fix_joint_x" default="0"/>
+  <xacro:arg name="fix_joint_y" default="-0.052"/>
+  <xacro:arg name="fix_joint_z" default="0.001"/>
+  <xacro:arg name="fix_joint_R" default="0.0"/>
+  <xacro:arg name="fix_joint_P" default="0.0"/>
+  <xacro:arg name="fix_joint_Y" default="1.570796"/>
+  <!-- z:  to avoid collision with box underneath-->
+  <!-- z value: minimal gap to avoid collision with robot joint base
+
+	y value range: [-0.056 -0.048]=[farest closest] to the panel   -->
+  <!-- TODO verify wich REFSYS moveit is using: if there is discrepancy
+	wrt to the spawn one and the one with varied y here 
+	TODO-->
+
+
+  <!-- common stuff -->
+  <xacro:include filename="$(find ur_description)/urdf/common.gazebo.xacro" />
+
+  <!-- ur3 macro inclusion -->
+  <xacro:include filename="$(find almasim)/launch/UR3_assembler.urdf.xacro" />
+
+  <!-- ARM SPAWN--> 
+   
+  <!--limited joint motion-->
+  <!--xacro: if value="${limited=='true'}"-->
+  <!--xacro: if value="${joint_limited}"-->
+	  <xacro:ur3_robot prefix="" joint_limited="$(arg joint_limited)"
+	    transmission_hw_interface="$(arg transmission_hw_interface)"
+	  />
+	<!--  copied from xacro above
+	    shoulder_pan_lower_limit="${-pi}" shoulder_pan_upper_limit="${pi}"
+	    shoulder_lift_lower_limit="${-pi}" shoulder_lift_upper_limit="${pi}"
+	    elbow_joint_lower_limit="${-pi}" elbow_joint_upper_limit="${pi}"
+	    wrist_1_lower_limit="${-pi}" wrist_1_upper_limit="${pi}"
+	    wrist_2_lower_limit="${-pi}" wrist_2_upper_limit="${pi}"
+	    wrist_3_lower_limit="${-pi}" wrist_3_upper_limit="${pi}"
+
+	-->
+  <!--/xacro:if-->
+
+  <!-- unlimited joint motion-->
+  <!--xacro:unless value="${limited=='true'}">
+	  <xacro:ur3_robot prefix="" joint_limited="$(arg limited)"
+	    transmission_hw_interface="$(arg transmission_hw_interface)"
+	  />
+  </xacro:unless-->
+
+  <!-- constraints-->
+  <link name="world" />
+
+  <joint name="base_link_fix_location" type="fixed">
+    <parent link="world" />
+    <child link = "base_link" />
+    <origin xyz="$(arg fix_joint_x) $(arg fix_joint_y) $(arg fix_joint_z)" 
+ 	    rpy="$(arg fix_joint_R) $(arg fix_joint_P) $(arg fix_joint_Y)" />
+  </joint>
+
+</robot>

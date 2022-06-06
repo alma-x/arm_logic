@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<launch>
+  	<!--arg name="" default="" /-->
+  	<arg name="node_start_delay" default="2" />
+
+        <!--param name="" type="" value="$(arg)"/-->
+        <param name="operation_mode" type="str" value="MANUAL"/>
+        <param name="machine_state" type="str" value="INIT"/>
+        <param name="network_ok" type="bool" value="false"/>
+
+<!-- passing parameters to a node:
+    1) tag(inside <node .../> args="arg1 arg2"
+        are then retrieved (ordered) from argv:
+            -C: (argv[0]=prog_name,) argv[1],...
+            -Py:args=rospy.myargv(argv=sys.argv), args[1],...
+    2) <node> <param.../></node> element:
+        a private parameter, access with  ~PARAM_NAME
+
+    3) <node> <rosparam ... /> </node>:
+        same, but in yaml format: from file or properly passed
+-->
+
+    <arg name="node1_number"  default="1"/>
+    <arg name="node$(arg node1_number)_bond"  value="test$(arg node1_number)_bond"/>
+    <node name="myTestNode$(arg node1_number)"
+             pkg="almasim"
+             type="TestNode.py"
+             respawn="false"
+             launch-prefix="xterm -e"
+             args="$(arg node1_number) $(arg node1_bond)">
+     </node>
+
+     <arg name="node2_number"  default="2"/>
+     <arg name="node2_bond"  value="test2_bond"/>
+     <node name="myTestNode$(arg node2_number)"
+              pkg="almasim"
+              type="TestNode.py"
+              respawn="false"
+              launch-prefix="xterm -e"
+              args="$(arg node2_number) $(arg node2_bond)">
+      </node>
+ <!--
+ <param name="node_number" value="1"/>
+ output="screen"
+ respawn_delay="30" [seconds]
+ required="true" :if node dies-> kill entire roslaunch
+ -->
+       <node name="myMonitor" 
+		pkg="almasim" 
+                type="NetworkMonitor.py"
+                respawn="false"
+                args="$(arg node1_bond) $(arg node2_bond)"
+                launch-prefix="xterm -e /bin/bash -c 'sleep $(arg node_start_delay); $0 $@' "
+                >
+        </node>
+<!---->
+      <node name="myManager"
+		pkg="almasim" 
+		type="StateManager.py" 
+                respawn="false"
+                launch-prefix="xterm -e /bin/bash -c 'sleep $(arg node_start_delay); $0 $@' "
+	></node> 
+
+
+<!-- -->
+    <!-- <group ns="rtabmap/Odom"> NAMESPACE
+    <param ..."/>
+    </group>-->
+	<!--group unless="$(arg)">
+
+         </group-->
+
+
+
+</launch>
