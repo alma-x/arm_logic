@@ -23,7 +23,7 @@
     <arg name="node1_number"  default="1"/>
     <arg name="node$(arg node1_number)_bond"  value="test$(arg node1_number)_bond"/>
     <node name="myTestNode$(arg node1_number)"
-             pkg="almasim"
+             pkg="arm_logic"
              type="TestNode.py"
              respawn="false"
              launch-prefix="xterm -e"
@@ -33,7 +33,7 @@
      <arg name="node2_number"  default="2"/>
      <arg name="node2_bond"  value="test2_bond"/>
      <node name="myTestNode$(arg node2_number)"
-              pkg="almasim"
+              pkg="arm_logic"
               type="TestNode.py"
               respawn="false"
               launch-prefix="xterm -e"
@@ -46,7 +46,7 @@
  required="true" :if node dies-> kill entire roslaunch
  -->
        <node name="myMonitor" 
-		pkg="almasim" 
+		pkg="arm_logic" 
                 type="NetworkMonitor.py"
                 respawn="false"
                 args="$(arg node1_bond) $(arg node2_bond)"
@@ -55,7 +55,7 @@
         </node>
 <!---->
       <node name="myManager"
-		pkg="almasim" 
+		pkg="arm_logic" 
 		type="StateManager.py" 
                 respawn="false"
                 launch-prefix="xterm -e /bin/bash -c 'sleep $(arg node_start_delay); $0 $@' "
