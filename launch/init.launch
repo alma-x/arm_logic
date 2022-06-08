@@ -29,13 +29,13 @@
 	respawn="false" 
 	output="screen"
 	></node>
-  	<node 
-  	name="arucoPanel" 
-  	pkg="arm_vision" 
-  	type="arucoPanel3.py" 
-  	respawn="false" 
-  	output="screen"
-  	></node>
+	<node 
+	name="arucoPanel" 
+	pkg="arm_vision" 
+	type="arucoPanel3.py" 
+	respawn="false" 
+	output="screen"
+	></node>
 
     <!-- CONTROLLER LAUNCHER-->
     <node 
@@ -58,6 +58,7 @@
 		file="$(find ur3_moveit_config)/launch/ur3_moveit_planning_execution.launch">
 		<arg name="sim" default="true"/>
 		</include>
+		
 		<node
 		name="move_group_python_gripper"
 		pkg="simulation" 

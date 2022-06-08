@@ -30,7 +30,7 @@
 	 ></node>
 
 
-	  <!--<node name="UI_gara" pkg="ur3_control" type="UI_gara.py" respawn="false" output="screen">
+	  <!--<node name="UI_gara" pkg="arm_control" type="UI_gara.py" respawn="false" output="screen">
 	  </node>
 	   -->
 

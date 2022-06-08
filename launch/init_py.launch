@@ -14,7 +14,7 @@
 
        
 	<!-- CV LAUNCHER-->
-	<!--<node name="bridge" pkg="ur3_control" type="bridge" respawn="false" output="screen"></node>-->
+	<!--<node name="bridge" pkg="arm_control" type="bridge" respawn="false" output="screen"></node>-->
 
   	<node 
   	name="arucoPanel" 
