@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-	<arg name="input"/>
-	<param name="imu_angle" type="double" value="$(arg input)" />
+	<arg name="angle"/>
+	<param name="imu_angle" type="double" value="$(arg angle)" />
 	<param name="objective" type="int" value="4" />
 </launch>
