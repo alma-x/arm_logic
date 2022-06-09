@@ -15,6 +15,10 @@
     <param name="gazebox" type="bool" value="$(arg gazebox)"/>
 
     <!-- COLLISION SERVER-->
+	<!-- <include 
+	file="$(find arm_control)/launch/collision.launch">
+	<arg name="" default=""/>
+	</include> -->
     <node 
     name="collision_interface" 
     pkg="arm_control" 
@@ -24,6 +28,10 @@
     ></node>
 
 	<!-- PANEL VISION -->
+	<!-- <include 
+	file="$(find arm_vision)/launch/vision.launch">
+	<arg name="" default=""/>
+	</include> -->
 	<node 
 	name="bridge" 
 	pkg="arm_control" 
@@ -34,13 +42,17 @@
 	<node 
 	name="arucoPanel" 
 	pkg="arm_vision" 
-	type="arucoPanel_DEBUG.py" 
+	type="arucoPanel3.py" 
 	respawn="false" 
 	output="screen"
 	launch-prefix="xterm -e"
 	></node>
 
     <!-- CONTROL ALGO -->
+	<!-- <include 
+	file="$(find arm_control)/launch/control.launch">
+	<arg name="" default=""/>
+	</include> -->
     <node 
     name="ERC" 
     pkg="arm_control" 
