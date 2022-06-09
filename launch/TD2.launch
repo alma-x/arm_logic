@@ -50,6 +50,7 @@
 
 	<!-- RVIZ-->
 	<include unless="$(arg lite)"
+
 	file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
 	<arg name="config" default="true"/>
 	<!-- include launch of correct model if gara or whatever-->
