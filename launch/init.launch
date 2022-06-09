@@ -32,9 +32,10 @@
 	<node 
 	name="arucoPanel" 
 	pkg="arm_vision" 
-	type="arucoPanel3.py" 
+	type="arucoPanel_DEBUG.py" 
 	respawn="false" 
 	output="screen"
+	launch-prefix="xterm -e"
 	></node>
 
     <!-- CONTROL ALGO -->
