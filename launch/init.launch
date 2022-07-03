@@ -28,10 +28,10 @@
     ></node>
 
 	<!-- PANEL VISION -->
-	<!-- <include 
-	file="$(find arm_vision)/launch/vision.launch">
-	<arg name="" default=""/>
-	</include> -->
+	<include 
+	file="$(find arm_vision)/launch/arm_vision.launch">
+	<!-- <arg name="" default=""/> -->
+	</include>
 	<node 
 	name="bridge" 
 	pkg="arm_control" 
