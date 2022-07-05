@@ -15,6 +15,10 @@
     <param name="gazebox" type="bool" value="$(arg gazebox)"/>
 
     <!-- COLLISION SERVER-->
+	<!-- <include 
+	file="$(find arm_control)/launch/collision.launch">
+	<arg name="" default=""/>
+	</include> -->
     <node 
     name="collision_interface" 
     pkg="arm_control" 
@@ -24,6 +28,10 @@
     ></node>
 
 	<!-- PANEL VISION -->
+	<include 
+	file="$(find arm_vision)/launch/arm_vision.launch">
+	<!-- <arg name="" default=""/> -->
+	</include>
 	<node 
 	name="bridge" 
 	pkg="arm_control" 
@@ -31,15 +39,20 @@
 	respawn="false" 
 	output="screen"
 	></node>
-	<node 
+	<!-- <node 
 	name="arucoPanel" 
 	pkg="arm_vision" 
 	type="arucoPanel3.py" 
 	respawn="false" 
 	output="screen"
-	></node>
+	launch-prefix="xterm -e"
+	></node> -->
 
     <!-- CONTROL ALGO -->
+	<!-- <include 
+	file="$(find arm_control)/launch/control.launch">
+	<arg name="" default=""/>
+	</include> -->
     <node 
     name="ERC" 
     pkg="arm_control" 
@@ -50,7 +63,6 @@
 
 	<!-- RVIZ-->
 	<include unless="$(arg lite)"
-
 	file="$(find ur3_moveit_config)/launch/moveit_rviz.launch">
 	<arg name="config" default="true"/>
 	<!-- include launch of correct model if gara or whatever-->
