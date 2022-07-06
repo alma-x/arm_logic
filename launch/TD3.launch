@@ -33,11 +33,19 @@
 	<!-- <arg name="" default=""/> -->
 	</include>
 
-	<node 
+	<!-- <node 
 	name="bridge" 
 	pkg="arm_control" 
 	type="bridge" 
 	respawn="false" 
+	output="screen"
+	></node> -->
+
+	<node 
+	name="inquirer" 
+	pkg="arm_vision" 
+	type="inquirer_aruco.py" 
+	respawn="true" 
 	output="screen"
 	></node>
 
