@@ -16,7 +16,7 @@
 
     <!-- COLLISION SERVER-->
 	<!-- <include 
-	file="$(find arm_control)/launch/collision.launch">
+	file="$(find arm_control)/launch/arm_collision.launch">
 	<arg name="" default=""/>
 	</include> -->
     <node 
@@ -32,6 +32,7 @@
 	file="$(find arm_vision)/launch/arm_vision.launch">
 	<!-- <arg name="" default=""/> -->
 	</include>
+
 	<node 
 	name="bridge" 
 	pkg="arm_control" 
@@ -39,18 +40,10 @@
 	respawn="false" 
 	output="screen"
 	></node>
-	<!-- <node 
-	name="arucoPanel" 
-	pkg="arm_vision" 
-	type="arucoPanel3.py" 
-	respawn="false" 
-	output="screen"
-	launch-prefix="xterm -e"
-	></node> -->
 
     <!-- CONTROL ALGO -->
 	<!-- <include 
-	file="$(find arm_control)/launch/control.launch">
+	file="$(find arm_control)/launch/arm_control.launch">
 	<arg name="" default=""/>
 	</include> -->
     <node 

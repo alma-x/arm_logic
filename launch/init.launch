@@ -28,10 +28,10 @@
     ></node>
 
 	<!-- PANEL VISION -->
-	<include 
+	<!-- <include 
 	file="$(find arm_vision)/launch/arm_vision.launch">
-	<!-- <arg name="" default=""/> -->
-	</include>
+	</include> -->
+
 	<node 
 	name="bridge" 
 	pkg="arm_control" 
@@ -39,6 +39,7 @@
 	respawn="false" 
 	output="screen"
 	></node>
+	
 	<node 
 	name="arucoPanel" 
 	pkg="arm_vision" 
