@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <launch>
-  	<arg name="lite" default="false" />
+  	<arg name="lite" default="true" />
     <arg name="inter_arg" default="1" />
     <arg name="gara" default="true" />
     <arg name="load_aruco" default="false" />
@@ -19,48 +19,31 @@
 	file="$(find arm_control)/launch/collision.launch">
 	<arg name="" default=""/>
 	</include> -->
-    <node 
+    <!-- <node 
     name="collision_interface" 
     pkg="arm_control" 
     type="collision_interface.py" 
     respawn="false" 
     output="screen"
-    ></node>
+    ></node> -->
 
-	<!-- PANEL VISION -->
-	<!-- <include 
-	file="$(find arm_vision)/launch/arm_vision.launch">
-	</include> -->
+	<!-- VISION -->
+	<include 
+	file="$(find arm_vision)/launch/vision.launch">
+	</include>
 
-	<node 
-	name="bridge" 
-	pkg="arm_control" 
-	type="bridge" 
-	respawn="false" 
-	output="screen"
-	></node>
-	
-	<node 
-	name="arucoPanel" 
-	pkg="arm_vision" 
-	type="arucoPanel3.py" 
-	respawn="false" 
-	output="screen"
-	launch-prefix="xterm -e"
-	></node>
 
-    <!-- CONTROL ALGO -->
-	<!-- <include 
+    <!-- CONTROL -->
+	<include 
 	file="$(find arm_control)/launch/control.launch">
-	<arg name="" default=""/>
-	</include> -->
-    <node 
+	</include>
+    <!-- <node 
     name="ERC" 
     pkg="arm_control" 
     type="ERC" 
     respawn="false" 
     output="screen" 
-    launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " />
+    launch-prefix="bash -c 'sleep $(arg node_start_delay); $0 $@' " /> -->
 
 	<!-- RVIZ-->
 	<include unless="$(arg lite)"
@@ -76,12 +59,12 @@
 		<arg name="sim" default="true"/>
 		</include>
 	<!-- SIM GRIPPER -->
-		<node
+		<!-- <node
 		name="move_group_python_gripper"
 		pkg="simulation" 
 		type="gripper.py"   
 		output="screen"
-		/>
+		/> -->
 	</group>
 
 </launch>

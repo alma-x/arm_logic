@@ -6,6 +6,7 @@ import numpy as np
 import os
 from geometry_msgs.msg import Pose
 import tf2_ros
+from tf.transformations import quaternion_inverse
 from geometry_msgs.msg import TransformStamped
 from arm_vision.msg import FoundArucos
 from arm_control.srv import DummyMarker,DummyMarkerResponse
@@ -33,7 +34,7 @@ class MyMoveGroup(object):
   def __init__(self):
     # super(Move_group_class, self).__init__()
 
-    moveit_commander.roscpp_initialize(sys.argv)
+    # moveit_commander.roscpp_initialize(sys.argv)
     # rospy.init_node('state_machine', anonymous=True)
     ## kinematic model and the robot's current joint states
     robot = RobotCommander()
@@ -297,6 +298,7 @@ class MyMoveGroup(object):
 
 my_move_group=MyMoveGroup()
 
+
 exit_request=False
 
 inquiries_service='aruco_inquiries'
@@ -317,9 +319,12 @@ def arucoInquiriesClient(id):
         inquirer=rospy.ServiceProxy(inquiries_service,DummyMarker)
         inquiry_result=inquirer(id)
 
-        if inquiry_result.found:
-            print(inquiry_result.pose)
-        else: print('not found yet')
+        if not inquiry_result.found:
+          print('not found yet')
+        else:
+          print('found')
+        return inquiry_result
+        
 
     except rospy.ServiceException as e:
         print("Service call failed: %s"%e)
@@ -327,16 +332,104 @@ def arucoInquiriesClient(id):
 
 def pressButton(button_id):
     print('pressing button: {}'.format(button_id))
+    answer=arucoInquiriesClient(int(button_id))
+    if answer.found:
+
+      SAFETY_X=0.05
+      SAFETY_Y=0
+      SAFETY_Z=0
+
+      MARKER_BUTTON_Z_DIST=0.03+0.05/2
+
+
+      current_pose = group.get_current_pose().pose
+      button_pose=answer.pose
+      target_pose=current_pose
+
+      # delta_x=button_pose.position.x-current_pose.position.x
+      # # >0 move forward +, <0 move backward -
+      # delta_y=button_pose.position.y-current_pose.position.y
+      # # >0 move right -, <0 move left +
+      # delta_z=button_pose.position.z-current_pose.position.z
+      # #>0 move up +, <0 move down -
+      # target_pose.position.x+=delta_x-SAFETY_X
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+      # target_pose.position.y-=delta_y+SAFETY_Y
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+      # target_pose.position.z+=delta_z+SAFETY_Z+MARKER_BUTTON_Z_DIST
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+      
+      delta_x=0.19
+      delta_y=-0.05
+      delta_z=0.05
+
+      # target_pose.position.x+=delta_x-SAFETY_X
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+      # target_pose.position.y-=delta_y+SAFETY_Y
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+      # target_pose.position.z+=delta_z+SAFETY_Z+MARKER_BUTTON_Z_DIST
+      # target_pose.orientation=current_pose.orientation
+      # my_move_group.go_to_pose_cartesian(button_pose)
+
 
 
 def markersInspection():
-    print('workspace exploration')
+  print('workspace exploration')
+  group_name="manipulator"
+  group=moveit_commander.MoveGroupCommander(group_name)
+  #motion backwards
+  wpose = group.get_current_pose().pose
+  wpose.position.x -= 0.2
+  my_move_group.go_to_pose_cartesian(wpose)
+  #rotation to imu
+  joint_vet=my_move_group.move_group.get_current_joint_values()
+  joint_vet[0]+=grad_to_rad(40)
+  joint_vet[1]+=grad_to_rad(20)
+  joint_vet[2]+=grad_to_rad(10)
+  joint_vet[3]+=grad_to_rad(20)
+  my_move_group.go_to_joint_state(joint_vet)
+  #rising to imu panel
+  joint_vet=my_move_group.move_group.get_current_joint_values()
+  joint_vet[2]-=grad_to_rad(25)
+  joint_vet[3]-=grad_to_rad(25)
+  my_move_group.go_to_joint_state(joint_vet)
+  #framing main panel
+  wpose = group.get_current_pose().pose
+  wpose.position.x -= 0.1
+  my_move_group.go_to_pose_cartesian(wpose)
+  #rotation to inspection panel
+  joint_vet=my_move_group.move_group.get_current_joint_values()
+  joint_vet[0]-=grad_to_rad(95)
+  my_move_group.go_to_joint_state(joint_vet)
+  #descending to panel storage
+  joint_vet=my_move_group.move_group.get_current_joint_values()
+  joint_vet[2]+=grad_to_rad(25)
+  joint_vet[3]+=grad_to_rad(25)
+  my_move_group.go_to_joint_state(joint_vet)
+  #TODO: REPEAT WITH INCREASED MOTION IF NOT EVERYTHING HAS BEEN FOUND
+
     
 def actuationOfButtons(buttons_ids):
     # buttons_ids=args.ids
+
+
+    print('closing gripper')
+    gripper_pub=rospy.Publisher('/gripper_command',String)
+    gripper_command=String()
+    gripper_command.data='open'
+    gripper_pub.publish(gripper_command)
+
+    homePositioning()
+
     print('pressing buttons sequence: {}'.format(buttons_ids))
     for button_id in buttons_ids:
         pressButton(button_id)
+        
 
 
 def sensorPickup():
@@ -373,12 +466,8 @@ def secretButton(secret_id):
 def homePositioning():
     print('returning home position')
     joint_vet=my_move_group.move_group.get_active_joints()
-    joint_vet[0]=grad_to_rad(0)
-    joint_vet[1]=grad_to_rad(-120)
-    joint_vet[2]=grad_to_rad(100)
-    joint_vet[3]=grad_to_rad(20)
-    joint_vet[4]=grad_to_rad(90)
-    joint_vet[5]=grad_to_rad(90)
+    for current_joint, home_value in enumerate(HOME_POSITION):
+      joint_vet[current_joint]=grad_to_rad(home_value)
     my_move_group.go_to_joint_state(joint_vet)
 
 
@@ -396,15 +485,19 @@ objectives_to_actions={ '1':markersInspection,
                     }
 
 def fakeController():
-    global request_served
+    global request_served, \
+            group, \
+            planning_frame ,\
+            robot,\
+            scene
     current_objective=0
 
-    # robot= moveit_commander.RobotCommander()
-    # scene=moveit_commander.PlanningSceneInterface()
-    # group_name="manipulator"
-    # group=moveit_commander.MoveGroupCommander(group_name)
-    # planning_frame = group.get_planning_frame()
-    # eef_link = group.get_end_effector_link()
+    robot= moveit_commander.RobotCommander()
+    scene=moveit_commander.PlanningSceneInterface()
+    group_name="manipulator"
+    group=moveit_commander.MoveGroupCommander(group_name)
+    planning_frame = group.get_planning_frame()
+    eef_link = group.get_end_effector_link()
     # group_names = robot.get_group_names()
     # robot.get_current_state()
     # print(robot.get_current_state())
@@ -413,40 +506,40 @@ def fakeController():
     while not rospy.core.is_shutdown() and not exit_request:
         
 
+      try:
         # requested_objective=input('current objective: {}\n select: '.format(current_objective))
         requested_objective=rospy.get_param("/objective")
         
         if current_objective!=requested_objective:
-            current_objective=requested_objective
-            if current_objective==1:
-                markersInspection()
-            elif current_objective==2:
-                buttons_sequence=rospy.get_param('\ids')
-                actuationOfButtons(buttons_sequence)
-            elif current_objective==3:
-                sensorPickup()
-            elif current_objective==4:
-                angle=rospy.get_param('/angle')
-                sensorPositioning(angle)
-            elif current_objective==5:
-                panelOpening()
-            elif current_objective==6:
-                panelConverStorage()
-            elif current_objective==7:
-                panelInspection()
-            elif current_objective==8:
-                panelClosing()
-            elif current_objective==9:
-                secretButton(secret_id)
-            elif current_objective==10:
-                homePositioning()
-            else:
-                print('waiting')
-        try:
-                
-                rospy.rostime.wallsleep(0.5)
-        except KeyboardInterrupt or rospy.ROSInterruptException:
-            
+          current_objective=requested_objective
+          if current_objective==1:
+              markersInspection()
+          elif current_objective==2:
+              buttons_sequence=rospy.get_param('/buttons_sequence').split()
+              actuationOfButtons(buttons_sequence)
+          elif current_objective==3:
+              sensorPickup()
+          elif current_objective==4:
+              angle=rospy.get_param('/imu_angle')
+              sensorPositioning(angle)
+          elif current_objective==5:
+              panelOpening()
+          elif current_objective==6:
+              panelConverStorage()
+          elif current_objective==7:
+              panelInspection()
+          elif current_objective==8:
+              panelClosing()
+          elif current_objective==9:
+              secret_id=rospy.get_param('/secret_id')
+              secretButton(secret_id)
+          elif current_objective==10:
+              homePositioning()
+          else:
+              print('objectives are int, [1,10]')
+          print('done')
+        rospy.rostime.wallsleep(0.5)
+      except KeyboardInterrupt or rospy.ROSInterruptException:
             rospy.signal_shutdown()
 
 
@@ -462,10 +555,11 @@ def fakeController():
 if __name__ == '__main__':
     
     node_name="controller"
-    print('node name: {}\n simulates some actins of objectives'.
+    print('node name: {}\n arm control routine'.
         format(node_name))
 
     rospy.init_node(node_name,anonymous=False)
+    
     moveit_commander.roscpp_initialize([])
     fakeController()
 

@@ -2,6 +2,6 @@
 <launch>
 	<arg name="tag"/>
 	<!-- since, if left unspecified, it retrieves it on its own, does this seem a bit redundant...?-->
-    <param name="hidden_ids" type="str" value="$(arg tag)" />
+    <param name="secret_id" type="str" value="$(arg tag)" />
 	<param name="objective" type="int" value="9" />
 </launch>
