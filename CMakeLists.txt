@@ -17,6 +17,9 @@ include_directories(
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 #install(DIRECTORY models DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
 
-catkin_install_python(PROGRAMS scripts/task_selector.py
+catkin_install_python(
+  PROGRAMS 
+    scripts/task_selector.py
+    scripts/test_tf.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
