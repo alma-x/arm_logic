@@ -14,18 +14,12 @@
     <param name="load_aruco" type="bool" value="$(arg load_aruco)"/>
     <param name="gazebox" type="bool" value="$(arg gazebox)"/>
 
-    <!-- COLLISION SERVER-->
-	<!-- <include 
-	file="$(find arm_control)/launch/collision.launch">
-	<arg name="" default=""/>
-	</include> -->
-    <!-- <node 
-    name="collision_interface" 
-    pkg="arm_control" 
-    type="collision_interface.py" 
-    respawn="false" 
-    output="screen"
-    ></node> -->
+	<!-- LOGIC -->
+	<include 
+	file="$(find arm_logic)/launch/logic.launch">
+	</include>
+
+
 
 	<!-- VISION -->
 	<include 

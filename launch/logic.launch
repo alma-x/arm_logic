@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<launch>
+
+<!-- ARG+PARAM: camera name and topic
+    ?automatically find thosa data? -->
+
+<!-- NODES -->
+ 
+<!-- NODE0: task selector-->
+        <node 
+                name="selector" 
+                pkg="arm_logic" 
+                type="task_selector.py" 
+                respawn="true" 
+                output="screen"
+                launch-prefix="xterm -e"
+        ></node>
+    
+<!-- NODE2: dummy gripper controller -->
+        <!-- <node 
+                name="gripper_controller" 
+                pkg="arm_control" 
+                type="gripper_controller.py" 
+                respawn="true" 
+                output="screen"
+                launch-prefix="xterm -e"
+        ></node> -->
+        
+<!--NODE3: collision service -->
+        <!-- <node 
+                name="collision_interface" 
+                pkg="arm_control" 
+                type="collision_interface.py" 
+                respawn="true" 
+                output="screen"
+                launch-prefix="xterm -e"
+        ></node> -->
+
+</launch>
