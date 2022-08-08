@@ -10,6 +10,7 @@ if __name__=="__main__":
     # launch=roslaunch.scriptapi.ROSLaunch()
     LAUNCH_COMMAND="roslaunch arm_logic objective"
     TASKS_DESCRIPTION="--- AVAILABLE TASKS, select [1-10]---\n"
+    print("##############\n\n##############\n\n##############\n\n##############")
     while not rospy.is_shutdown():
         print(TASKS_DESCRIPTION)
         try:

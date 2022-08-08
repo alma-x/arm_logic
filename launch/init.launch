@@ -20,7 +20,6 @@
 	</include>
 
 
-
 	<!-- VISION -->
 	<include 
 	file="$(find arm_vision)/launch/vision.launch">
