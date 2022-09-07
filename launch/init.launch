@@ -2,7 +2,7 @@
 <launch>
   	<arg name="lite" default="true" />
     <arg name="inter_arg" default="1" />
-    <arg name="gara" default="true" />
+    <arg name="gara" default="false" />
     <arg name="load_aruco" default="false" />
     <arg name="node_start_delay" default="2.0" />
     <arg name="gazebox" default="false" />
@@ -47,10 +47,10 @@
 	
 	<group unless="$(arg gara)">
 	<!-- SIM MOVEIT -->
-		<include 
+		<!-- <include 
 		file="$(find ur3_moveit_config)/launch/ur3_moveit_planning_execution.launch">
 		<arg name="sim" default="true"/>
-		</include>
+		</include> -->
 	<!-- SIM GRIPPER -->
 		<!-- <node
 		name="move_group_python_gripper"
@@ -58,6 +58,10 @@
 		type="gripper.py"   
 		output="screen"
 		/> -->
+		<include 
+		file="$(find erc_aruco_checker)/launch/erc_aruco_checker.launch">
+		<arg name="sim" default="true"/>dsfdsfsdf	
+		</include>
 	</group>
 
 </launch>
