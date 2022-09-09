@@ -2,7 +2,7 @@
 <launch>
   	<arg name="lite" default="true" />
     <arg name="inter_arg" default="1" />
-    <arg name="gara" default="false" />
+    <arg name="gara" default="true" />
     <arg name="load_aruco" default="false" />
     <arg name="node_start_delay" default="2.0" />
     <arg name="gazebox" default="false" />
@@ -60,7 +60,7 @@
 		/> -->
 		<include 
 		file="$(find erc_aruco_checker)/launch/erc_aruco_checker.launch">
-		<arg name="sim" default="true"/>dsfdsfsdf	
+		<arg name="sim" default="true"/>
 		</include>
 	</group>
 
